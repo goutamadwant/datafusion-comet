@@ -18,7 +18,7 @@
 use arrow::array::RecordBatch;
 use arrow::datatypes::{DataType, Schema, SchemaRef};
 use arrow::ipc::writer::{
-    write_message, CompressionContext, DictionaryTracker, IpcDataGenerator, IpcWriteOptions,
+    write_message, DictionaryTracker, IpcDataGenerator, IpcWriteContext, IpcWriteOptions,
     StreamWriter,
 };
 use arrow::ipc::MetadataVersion;
@@ -146,7 +146,7 @@ impl ShuffleBlockWriter {
         &self,
         batch: &RecordBatch,
         out: &mut W,
-        compression_context: &mut CompressionContext,
+        compression_context: &mut IpcWriteContext,
     ) -> Result<()> {
         let schema_message = match &self.schema_encoding {
             SchemaEncoding::Fallback(schema) => {
@@ -184,7 +184,7 @@ impl ShuffleBlockWriter {
         &self,
         batch: &RecordBatch,
         output: &mut W,
-        compression_context: &mut CompressionContext,
+        compression_context: &mut IpcWriteContext,
         ipc_time: &Time,
     ) -> Result<usize> {
         if batch.num_rows() == 0 {

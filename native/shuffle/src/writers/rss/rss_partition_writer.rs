@@ -19,7 +19,7 @@ use crate::metrics::ShufflePartitionerMetrics;
 use crate::writers::partition_writer::PartitionWriter;
 use crate::ShuffleBlockWriter;
 use arrow::array::RecordBatch;
-use arrow::ipc::writer::CompressionContext;
+use arrow::ipc::writer::IpcWriteContext;
 use datafusion::common::{DataFusionError, Result};
 use datafusion_comet_jni_bridge::ShufflePartitionPusher;
 use std::io::Cursor;
@@ -41,7 +41,7 @@ pub(crate) struct RssPartitionWriter {
     pusher: Arc<dyn ShufflePartitionPusher>,
     num_partitions: usize,
     max_frame_size: usize,
-    compression_context: CompressionContext,
+    compression_context: IpcWriteContext,
     frame: Vec<u8>,
     next_partition_to_finish: usize,
     finished: bool,
@@ -82,7 +82,7 @@ impl RssPartitionWriter {
             pusher,
             num_partitions,
             max_frame_size,
-            compression_context: CompressionContext::default(),
+            compression_context: IpcWriteContext::default(),
             frame: Vec::new(),
             next_partition_to_finish: 0,
             finished: false,
